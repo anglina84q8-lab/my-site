@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار الدقة والبلوتوث</title>
+</head>
+<body>
+    <h1>معلومات الجهاز</h1>
+    <p>دقة الشاشة: <span id="res">جاري القراءة...</span></p>
+    <button id="btBtn">طلب بلوتوث</button>
+    <p id="btStatus"></p>
+
+    <script>
+        document.getElementById('res').textContent = 
+            screen.width + ' × ' + screen.height;
+
+        const btBtn = document.getElementById('btBtn');
+        const btStatus = document.getElementById('btStatus');
+
+        if (!navigator.bluetooth) {
+            btStatus.textContent = 'المتصفح لا يدعم Web Bluetooth.';
+            btBtn.disabled = true;
+        } else {
+            btBtn.addEventListener('click', async () => {
+                try {
+                    const device = await navigator.bluetooth.requestDevice({
+                        acceptAllDevices: true
+                    });
+                    btStatus.textContent = 'تم اختيار: ' + device.name;
+                } catch (err) {
+                    btStatus.textContent = 'فشل أو تم الإلغاء: ' + err.message;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
